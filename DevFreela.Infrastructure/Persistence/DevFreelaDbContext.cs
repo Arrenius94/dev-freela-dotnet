@@ -15,9 +15,9 @@ public class DevFreelaDbContext
 
         Users = new List<User>
         {
-            new User("Luis Felipe", "luisdev@luisdev.com.br", new DateTime(1992, 1, 1)),
-            new User("Robert C Martin", "robert@luisdev.com.br", new DateTime(1950, 1, 1)),
-            new User("Anderson", "anderson@luisdev.com.br", new DateTime(1980, 1, 1))
+            new User("Luis Felipe", "luisdev@luisdev.com.br", "1234", new DateTime(1992, 1, 1)),
+            new User("Robert C Martin", "robert@luisdev.com.br", "123456",new DateTime(1950, 1, 1)),
+            new User("Anderson", "anderson@luisdev.com.br", "123456", new DateTime(1980, 1, 1))
         };
 
         Skills = new List<Skill>

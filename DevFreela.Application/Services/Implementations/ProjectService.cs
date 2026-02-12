@@ -19,7 +19,11 @@ public class ProjectService : IProjectService
     {
         var projects = _dbContext.Projects;
 
-        var projectsViewModels = projects
+        var filteredProjectsByTitle = string.IsNullOrWhiteSpace(query)
+            ? projects
+            : projects.Where(p => p.Title.StartsWith(query, StringComparison.OrdinalIgnoreCase)).ToList();
+        
+        var projectsViewModels = filteredProjectsByTitle
             .Select(p => new ProjectViewModel(p.Id, p.Title, p.CreatedAt))
             .ToList();
         
@@ -29,7 +33,8 @@ public class ProjectService : IProjectService
     public ProjectDetailsViewModel GetById(int id)
     {
         var project = _dbContext.Projects.SingleOrDefault(p => p.Id == id);
-
+        if (project == null) return null;
+            
         var projectDetailsViewModel = new ProjectDetailsViewModel(
             project.Id,
             project.Title,
