@@ -17,7 +17,9 @@ public class Project : BaseEntity
     public string Title { get; private set; }
     public string Description { get; private set; }
     public int IdClient { get; private set; }
+    public User Client { get; private set; }
     public int IdFreelancer { get; private set; }
+    public User FreeLancer { get; private set; }
     public decimal TotalCost { get; private  set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? StartedAt { get; private set; }
@@ -38,7 +40,7 @@ public class Project : BaseEntity
         if (Status == ProjectStatusEnum.Created)
         {
             Status = ProjectStatusEnum.InProgress;
-            FinishAt = DateTime.Now;
+            StartedAt = DateTime.Now;
         }
     }
 

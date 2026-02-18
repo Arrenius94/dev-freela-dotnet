@@ -48,7 +48,8 @@ public class ProjectService : IProjectService
 
     public int Create(NewProjectInputModel inputModel)
     {
-        var project = new Project(inputModel.Title, inputModel.Description, inputModel.IdCliente, inputModel.IdFreelancer, inputModel.TotalCost);
+        var project = new 
+            Project(inputModel.Title, inputModel.Description, inputModel.IdCliente, inputModel.IdFreelancer, inputModel.TotalCost);
             
         _dbContext.Projects.Add(project);
         
