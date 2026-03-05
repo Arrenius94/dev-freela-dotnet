@@ -1,7 +1,9 @@
 using DevFreela.API.Models;
+using DevFreela.Application.Commands.CreateProject;
 using DevFreela.Application.Services.Implementations;
 using DevFreela.Application.Services.Interfaces;
 using DevFreela.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,14 +13,23 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 /*builder.Services.AddOpenApi();*/
 
-builder.Services.Configure<OpenTimeOption>(builder.Configuration.GetSection("OpenTime"));
+/*builder.Services.Configure<OpenTimeOption>(builder.Configuration.GetSection("OpenTime"));*/
 
-builder.Services.AddSingleton<DevFreelaDbContext>();
+var connectionString = builder.Configuration.GetConnectionString("DevFreelaCs");
+builder.Services.AddDbContext<DevFreelaDbContext>(options => options.UseSqlServer(connectionString));
+
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ISkillService, SkillService>();
 
-builder.Services.AddScoped<ExampleClass>(e => new ExampleClass { Name = "Initial Stage" });
+/*builder.Services.AddScoped<ExampleClass>(e => new ExampleClass { Name = "Initial Stage" })*/;
 
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddMediatR(cfg => {
+    cfg.RegisterServicesFromAssembly(typeof(CreateProjectCommand).Assembly);
+});
+
 builder.Services.AddSwaggerGen(); 
 
 var app = builder.Build();

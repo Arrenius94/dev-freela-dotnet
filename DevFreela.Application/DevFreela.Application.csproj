@@ -11,4 +11,13 @@
       <ProjectReference Include="..\DevFreela.Infrastructure\DevFreela.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Dapper" Version="2.1.66" />
+      <PackageReference Include="MediatR" Version="14.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Queries\GetAllSkills\" />
+    </ItemGroup>
+
 </Project>
