@@ -11,10 +11,10 @@ public interface IProjectService
 
     /*int Create(NewProjectInputModel inputModel);*/
     
-    void Update(UpdateProjectInputModel inputModel);
+    /*void Update(UpdateProjectInputModel inputModel);*/
     
     /*void Delete(int id);*/
     /*void CreateComment(CreateCommentInputModel inputModel);*/
     void Start(int id);
-    void Finish(int id);
+    /*void Finish(int id);*/
 }

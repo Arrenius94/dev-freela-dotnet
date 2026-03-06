@@ -65,12 +65,12 @@ public class ProjectService : IProjectService
         return project.Id;
     }*/
 
-    public void Update(UpdateProjectInputModel inputModel)
+    /*public void Update(UpdateProjectInputModel inputModel)
     {
         var project = _dbContext.Projects.SingleOrDefault(p => p.Id == inputModel.Id);
         project.Update(inputModel.Title, inputModel.Description, inputModel.TotalCost);
         _dbContext.SaveChanges();
-    }
+    }*/
 
     /*public void Delete(int id)
     {
@@ -101,10 +101,10 @@ public class ProjectService : IProjectService
         }
     }
 
-    public void Finish(int id)
+    /*public void Finish(int id)
     {
         var project = _dbContext.Projects.SingleOrDefault(p => p.Id == id);
         project.Finish();
         _dbContext.SaveChanges();
-    }
+    }*/
 }

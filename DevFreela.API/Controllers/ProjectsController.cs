@@ -1,6 +1,8 @@
 using DevFreela.API.Models;
 using DevFreela.Application.Commands.CreateProject;
 using DevFreela.Application.Commands.DeleteProject;
+using DevFreela.Application.Commands.FinishProject;
+using DevFreela.Application.Commands.UpdateProject;
 using DevFreela.Application.InputModels;
 using DevFreela.Application.Services.Interfaces;
 using MediatR;
@@ -57,14 +59,15 @@ public class ProjectsController : ControllerBase
     
     // api/projects/2
     [HttpPut("{id}")]
-    public IActionResult Put (int id, [FromBody] UpdateProjectInputModel inputProject)
+    public async Task<IActionResult> Put (int id, [FromBody] UpdateProjectCommand command)
     {
-        if (inputProject.Description.Length > 200)
+        command.Id = id;
+        if (command.Description.Length > 200)
         {
             return BadRequest();
         }
-        
-        _projectService.Update(inputProject);
+        await  _mediator.Send(command);
+        /*_projectService.Update(inputProject);*/
         // Att o objeto
         return NoContent();
     }
@@ -98,9 +101,11 @@ public class ProjectsController : ControllerBase
 
     // api/projects/1/finish
     [HttpPut("{id}/finish")]
-    public IActionResult Finish(int id)
+    public async Task<IActionResult> Finish(int id)
     {
-        _projectService.Finish(id);
+        var command = new FinishProjectCommand(id);
+        await _mediator.Send(command);
+        /*_projectService.Finish(id);*/
         return NoContent();
     }
 }
