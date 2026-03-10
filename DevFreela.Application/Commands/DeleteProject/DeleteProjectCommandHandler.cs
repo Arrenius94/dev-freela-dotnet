@@ -15,7 +15,7 @@ public class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand,
     {
         var project = _dbContext.Projects.SingleOrDefault(p => p.Id == request.Id); 
         project.Cancel();
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

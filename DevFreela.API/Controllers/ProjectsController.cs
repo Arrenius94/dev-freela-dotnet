@@ -2,6 +2,9 @@ using DevFreela.API.Models;
 using DevFreela.Application.Commands.CreateProject;
 using DevFreela.Application.Commands.DeleteProject;
 using DevFreela.Application.Commands.FinishProject;
+using DevFreela.Application.Commands.ProjectDetailsViewModel;
+using DevFreela.Application.Commands.ProjectViewModel;
+using DevFreela.Application.Commands.StartProject;
 using DevFreela.Application.Commands.UpdateProject;
 using DevFreela.Application.InputModels;
 using DevFreela.Application.Services.Interfaces;
@@ -23,20 +26,28 @@ public class ProjectsController : ControllerBase
     }
     // api/projects?query=net core
     [HttpGet]
-    public IActionResult Get(string query)
+    public async Task<IActionResult> Get(string query)
     {
-        var projects = _projectService.GetAll(query);
+        /*var projects = _projectService.GetAll(query);*/
+        var command = new ProjectViewModelCommand(query);
+        var projects = await _mediator.Send(command);
+
+        if (projects == null)
+        {
+            return NotFound();
+        }
         return Ok(projects); 
     }
 
     // api/projects/599
     [HttpGet("{id}")]
-    public IActionResult GetById (int id)
+    public async Task<IActionResult> GetById (int id)
     {
-        var project = _projectService.GetById(id);
+        /*var project = _projectService.GetById(id);*/
+        var query = new ProjectDetailsViewModelCommand(id);
+        var project = await _mediator.Send(query);
         if (project == null)
         {
-            // return not found();
             return NotFound();
         }
         // Buscar o projeto por ID
@@ -76,9 +87,9 @@ public class ProjectsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
+        /*_projectService.Delete(id);*/
         var command = new DeleteProjectCommand(id);
         await _mediator.Send(command);
-        /*_projectService.Delete(id);*/
         return NoContent();
     }
     
@@ -93,9 +104,11 @@ public class ProjectsController : ControllerBase
     
     // api/projects/1/start
     [HttpPut("{id}/start")]
-    public IActionResult Start(int id)
+    public async Task<IActionResult> Start(int id)
     {
-        _projectService.Start(id);
+        /*_projectService.Start(id);*/
+        var command = new StartProjectCommand(id);
+        await _mediator.Send(command);
         return NoContent();
     }
 
@@ -103,9 +116,9 @@ public class ProjectsController : ControllerBase
     [HttpPut("{id}/finish")]
     public async Task<IActionResult> Finish(int id)
     {
+        /*_projectService.Finish(id);*/
         var command = new FinishProjectCommand(id);
         await _mediator.Send(command);
-        /*_projectService.Finish(id);*/
         return NoContent();
     }
 }

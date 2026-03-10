@@ -10,5 +10,5 @@ public class UserViewModel
     }
     public string FullName { get; private set; }
     public string Email { get; private set; }
-    public DateTime DateOfBirth { get; private set; }
+    public DateTime DateOfBirth { get; private set; } 
 }

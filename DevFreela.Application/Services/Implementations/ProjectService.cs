@@ -20,7 +20,7 @@ public class ProjectService : IProjectService
         _connectionString = configuration.GetConnectionString("DevFreelaCs");
     }
     
-    public List<ProjectViewModel> GetAll(string query)
+    /*public List<ProjectViewModel> GetAll(string query)
     {
         var projects = _dbContext.Projects;
 
@@ -33,9 +33,9 @@ public class ProjectService : IProjectService
             .ToList();
         
         return  projectsViewModels;
-    }
+    }*/
 
-    public ProjectDetailsViewModel GetById(int id)
+    /*public ProjectDetailsViewModel GetById(int id)
     {
         var project = _dbContext.Projects
             .Include(p => p.Client)
@@ -54,7 +54,7 @@ public class ProjectService : IProjectService
             project.FreeLancer.FullName
             );
         return projectDetailsViewModel;
-    }
+    }*/
 
     /*public int Create(NewProjectInputModel inputModel)
     {
@@ -87,7 +87,7 @@ public class ProjectService : IProjectService
         _dbContext.SaveChanges();
     }*/
 
-    public void Start(int id)
+    /*public void Start(int id)
     {
         var project = _dbContext.Projects.SingleOrDefault(p => p.Id == id);
         project.Start();    
@@ -99,7 +99,7 @@ public class ProjectService : IProjectService
             var script = "UPDATE Projects SET Status = @status, StartedAt = @startedat WHERE Id = @Id";
             sqlConnection.Execute(script, new {status = project.Status, startedat = project.StartedAt, id});
         }
-    }
+    }*/
 
     /*public void Finish(int id)
     {
