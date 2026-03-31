@@ -1,33 +1,42 @@
-using Dapper;
-using DevFreela.Application.Services.Interfaces;
-using DevFreela.Application.ViewModels;
-using DevFreela.Infrastructure.Persistence;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 
+using DevFreela.Application.Services.Interfaces;
+using DevFreela.Core.DTOS.Input.SkillsInputDto;
+using DevFreela.Core.DTOS.Output.SkillsOutputDto;
+using DevFreela.Core.Entities;
+using DevFreela.Core.Repositories;
+using DevFreela.Infrastructure.Persistence;
+using Microsoft.Extensions.Configuration;
 namespace DevFreela.Application.Services.Implementations;
 
 public class SkillService : ISkillService
 {
     private readonly DevFreelaDbContext _dbContext;
-    private readonly string _connectionString;
-    
-    public SkillService(DevFreelaDbContext dbContext, IConfiguration configuration)
+    private readonly ISkillRepository _skillRepository;
+    public SkillService(DevFreelaDbContext dbContext, IConfiguration configuration, ISkillRepository skillRepository)
     {
         _dbContext = dbContext;
-        _connectionString = configuration.GetConnectionString("DevFreelaCs");
+        _skillRepository = skillRepository;
     }
-    public List<SkillViewModel> GetAll()
+    public async Task<List<SkillDTO>> GetAll(string query)
     {
-        using (var sqlConnection = new SqlConnection(_connectionString))
-        {
-            sqlConnection.Open();
-            var script = "SELECT Id, Description FROM Skills";
-            return sqlConnection.Query<SkillViewModel>(script).ToList();
-        }
+        
+        return await _skillRepository.GetAll(query);
         
         /*var skill = _dbContext.Skills;
         var skillModel = skill.Select(s => new SkillViewModel(s.Id, s.Description)).ToList();
         return skillModel;*/
+    }
+
+    public async Task<int> Create(SkillCreateDTO skillDTO)
+    {
+        var skill = new Skill (skillDTO.Description);
+        
+        if (skillDTO.Description.Length < 3)
+        {
+            throw new ArgumentException("A descrição deve conter pelo menos 3 caracteres.");
+        }
+        
+        var id = await _skillRepository.SaveAsync(skill);
+        return id;
     }
 }

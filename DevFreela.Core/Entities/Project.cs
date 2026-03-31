@@ -8,7 +8,7 @@ public class Project : BaseEntity
         Description = description;
         IdClient = idClient;
         IdFreelancer = idFreelancer;
-        TotalCost = totalCost;
+        TotalCost = totalCost;  
         
         CreatedAt = DateTime.Now;
         Status = ProjectStatusEnum.Created;

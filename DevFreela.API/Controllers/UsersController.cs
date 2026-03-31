@@ -2,7 +2,10 @@ using DevFreela.API.Models;
 using DevFreela.Application.InputModels;
 using DevFreela.Application.Services.Interfaces;
 using DevFreela.Application.ViewModels;
+using DevFreela.Core.DTOS.Input.Users;
+using DevFreela.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DevFreela.API.Controllers;
 [Route("api/users")]
@@ -10,47 +13,87 @@ public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
     public UsersController(IUserService userService)
-    { 
+    {
         _userService = userService;
     }
-    
-    [HttpGet("{id}")] 
-    public IActionResult GetById(int id)
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
     {
-        var user = _userService.GetById(id);
-        if (user == null)
+        try
         {
-            return NotFound();
+            var user = await _userService.GetByIdAsync(id);
+            return Ok(user);
         }
-        return Ok(user);
-        
-    }
-    
-    // api/users
-    [HttpPost]
-    public IActionResult Post([FromBody] CreateUserInputModel createInputUserModel)
-    {
-        if (createInputUserModel is null)
+        catch (DomainException ex)
         {
-            return BadRequest("Os dados do usuário são obrigatórios.");
+            return NotFound(new { message = ex.Message });
         }
-        var id = _userService.Create(createInputUserModel);
-        return CreatedAtAction (nameof(GetById), new {id = id}, createInputUserModel);
     }
 
-    // api/users/1/login
-    [HttpPut("{id}/login")]
-    public IActionResult Login(int id, [FromBody] UserViewLoginModel loginModel)
+    [HttpGet]
+    public async Task<IActionResult> Get([FromQuery] string? query)
     {
-        if (loginModel is null)
-        {
-            return BadRequest("Os dados de login são obrigatórios.");
-        }
-        var userId = _userService.Login(loginModel);
-        if (userId == 0)
-        {
-            return Unauthorized("Credenciais inválidas.");
-        }
-        return Ok($"Usuário com ID {userId} autenticado com sucesso.");
+        var input = new GetUsersInput { Query = query };
+
+        var users = await _userService.GetAllAsync(input);
+        return Ok(users);
     }
+
+    // api/users
+    [HttpPost]
+    public async Task<IActionResult> Post([FromBody] CreateUserDto createInputUserModel)
+    {
+        try
+        {
+            var id = await _userService.CreateAsync(createInputUserModel);
+
+            return CreatedAtAction(nameof(GetById), new { id = id }, createInputUserModel);
+        }
+        catch (DomainException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "Ocorreu um erro interno inesperado.");
+        }
+    }
+
+    // api/users//login
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginUser inputModel)
+    {
+        var loginResult = await _userService.LoginAsync(inputModel);
+
+        if (loginResult == null)
+        {
+            return Unauthorized("Email ou senha inválidos.");
+        }
+        return Ok(loginResult);
+    }
+
+    [HttpDelete("delete{id}")]
+    public async Task<IActionResult> DeleteAsync(int id)
+    {
+        try
+        {
+            var deleteInput = new DeleteUserInput { Id = id };
+            await _userService.DeleteAsync(deleteInput);
+            return Ok(new { message = "Usuário deletado com sucesso!" });
+
+        }
+        catch (DomainException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("{id}/skills")]
+    public async Task<IActionResult> PostSkill(int id, [FromBody] UserSkillInput inputModel)
+    {
+        await _userService.CreateUserSkillAsync(id, inputModel);
+        return NoContent();
+    }
+
 }

@@ -11,5 +11,10 @@ public class UserSkillConfigurations : IEntityTypeConfiguration<UserSkill>
         builder
             .ToTable("UserSkill")
             .HasKey(s => s.Id);
+
+        builder
+        .HasOne(u => u.Skill)         
+        .WithMany()                  
+        .HasForeignKey(u => u.IdSkill);
     }
 }

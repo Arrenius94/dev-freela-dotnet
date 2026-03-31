@@ -1,12 +1,13 @@
 using DevFreela.API.Models;
+using DevFreela.Application.Commands.CreateComment;
 using DevFreela.Application.Commands.CreateProject;
 using DevFreela.Application.Commands.DeleteProject;
 using DevFreela.Application.Commands.FinishProject;
-using DevFreela.Application.Commands.ProjectDetailsViewModel;
-using DevFreela.Application.Commands.ProjectViewModel;
 using DevFreela.Application.Commands.StartProject;
 using DevFreela.Application.Commands.UpdateProject;
 using DevFreela.Application.InputModels;
+using DevFreela.Application.Queries.GetAllProjects;
+using DevFreela.Application.Queries.GetProjectById;
 using DevFreela.Application.Services.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,14 +30,15 @@ public class ProjectsController : ControllerBase
     public async Task<IActionResult> Get(string query)
     {
         /*var projects = _projectService.GetAll(query);*/
-        var command = new ProjectViewModelCommand(query);
-        var projects = await _mediator.Send(command);
-
-        if (projects == null)
+        if (!string.IsNullOrWhiteSpace(query) && query.Length < 2)
         {
-            return NotFound();
+            return BadRequest("Para filtrar, digite pelo menos 2 caracteres");
         }
-        return Ok(projects); 
+        
+        var command = new GetAllProjectsQuery(query);
+        var projects = await _mediator.Send(command);
+        
+        return Ok(projects);
     }
 
     // api/projects/599
@@ -44,7 +46,7 @@ public class ProjectsController : ControllerBase
     public async Task<IActionResult> GetById (int id)
     {
         /*var project = _projectService.GetById(id);*/
-        var query = new ProjectDetailsViewModelCommand(id);
+        var query = new GetProjectByIdQuery(id);
         var project = await _mediator.Send(query);
         if (project == null)
         {
@@ -58,10 +60,6 @@ public class ProjectsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post ([FromBody] CreateProjectCommand comand)
     {
-        if (comand.Title.Length > 50)
-        {
-            return BadRequest("Nao pode ser maior q 50 caracteres");
-        }
         // cadastrar o projeto
         /*var id = _projectService.Create(inputModel);*/
         var id = await _mediator.Send(comand);
@@ -95,7 +93,7 @@ public class ProjectsController : ControllerBase
     
     // api/projects/1/comments
     [HttpPost("{id}/coments")]
-    public async Task<IActionResult> PostComment(int id, [FromBody] CreateProjectCommand comand)
+    public async Task<IActionResult> PostComment(int id, [FromBody] CreateCommentCommand comand)
     {
        await _mediator.Send(comand);
        
