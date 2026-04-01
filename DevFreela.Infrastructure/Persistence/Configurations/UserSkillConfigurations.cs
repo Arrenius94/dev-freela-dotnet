@@ -13,8 +13,15 @@ public class UserSkillConfigurations : IEntityTypeConfiguration<UserSkill>
             .HasKey(s => s.Id);
 
         builder
-        .HasOne(u => u.Skill)         
-        .WithMany()                  
-        .HasForeignKey(u => u.IdSkill);
+            .HasOne(us => us.Skill)          
+            .WithMany()                      
+            .HasForeignKey(us => us.IdSkill)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        builder
+            .HasOne(us => us.User)           
+            .WithMany()                      
+            .HasForeignKey(us => us.IdUser)  
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
