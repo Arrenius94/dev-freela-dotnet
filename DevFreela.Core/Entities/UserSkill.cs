@@ -11,7 +11,6 @@ public class UserSkill : BaseEntity
     
     public int IdUser { get; private set; }
     public int IdSkill { get; private set; }
-
-    [ForeignKey("IdSkill")]
-    public Skill Skill { get; private set; }
+    public virtual Skill Skill { get; private set; }
+    public virtual User User { get; private set; }
 }
