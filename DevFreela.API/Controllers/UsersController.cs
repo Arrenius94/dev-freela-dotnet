@@ -44,26 +44,17 @@ public class UsersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] CreateUserDto createInputUserModel)
     {
-        try
-        {
+            
             var id = await _userService.CreateAsync(createInputUserModel);
-
+            
             return CreatedAtAction(nameof(GetById), new { id = id }, createInputUserModel);
-        }
-        catch (DomainException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception)
-        {
-            return StatusCode(500, "Ocorreu um erro interno inesperado.");
-        }
     }
 
     // api/users//login
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginUser inputModel)
     {
+       
         var loginResult = await _userService.LoginAsync(inputModel);
 
         if (loginResult == null)

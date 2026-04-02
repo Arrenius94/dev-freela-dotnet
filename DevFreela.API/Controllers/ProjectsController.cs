@@ -60,6 +60,7 @@ public class ProjectsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post ([FromBody] CreateProjectCommand comand)
     {
+       
         // cadastrar o projeto
         /*var id = _projectService.Create(inputModel);*/
         var id = await _mediator.Send(comand);
@@ -71,10 +72,6 @@ public class ProjectsController : ControllerBase
     public async Task<IActionResult> Put (int id, [FromBody] UpdateProjectCommand command)
     {
         command.Id = id;
-        if (command.Description.Length > 200)
-        {
-            return BadRequest();
-        }
         await  _mediator.Send(command);
         /*_projectService.Update(inputProject);*/
         // Att o objeto

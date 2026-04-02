@@ -50,14 +50,6 @@ public class UserService : IUserService
 
     async Task<int> IUserService.CreateAsync(CreateUserDto createUser)
     {
-        if (string.IsNullOrWhiteSpace(createUser.FullName))
-        {
-            throw new DomainException ("Ops! O nome completo é obritaorio");
-        }
-        if (createUser.Email == null)
-        {
-            throw new DomainException ("Ops! O email é obritaorio");
-        }
         var user = new User(createUser.FullName, createUser.Email, createUser.Password, createUser.BirthDate);
         await _userRepository.SaveAsync(user);
         return user.Id;
