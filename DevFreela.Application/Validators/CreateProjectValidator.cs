@@ -11,8 +11,8 @@ public class CreateProjectValidator : AbstractValidator<CreateProjectCommand>
             .MaximumLength(255)
             .WithMessage("A descrição deve conter no máximo 255 caracteres.");
         
-            RuleFor(p => p.Title)
-                .MaximumLength(30)
-                .WithMessage("O título deve conter no máximo 30 caracteres.");
+        RuleFor(p => p.Title)
+            .MaximumLength(30)
+            .WithMessage("O título deve conter no máximo 30 caracteres.");
     }
 }
