@@ -9,6 +9,8 @@ using DevFreela.Infrastructure.Persistence.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using DevFreela.API.Filters;
+using DevFreela.Core.Services;
+using DevFreela.Infrastructure.Auth;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +44,7 @@ builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 /*builder.Services.AddScoped<ExampleClass>(e => new ExampleClass { Name = "Initial Stage" })*/
 ;
 

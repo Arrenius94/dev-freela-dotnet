@@ -6,6 +6,7 @@ using DevFreela.Core.DTOS.Output.Users;
 using DevFreela.Core.Entities;
 using DevFreela.Core.Exceptions;
 using DevFreela.Core.Repositories;
+using DevFreela.Core.Services;
 using DevFreela.Infrastructure.Persistence;
 
 namespace DevFreela.Application.Services.Implementations;
@@ -14,10 +15,12 @@ public class UserService : IUserService
 {
     private readonly DevFreelaDbContext _dbContext;
     private readonly IUserRepository _userRepository;
-    public UserService(DevFreelaDbContext dbContext, IUserRepository userRepository)
+    private readonly IAuthService _authService;
+    public UserService(DevFreelaDbContext dbContext, IUserRepository userRepository, IAuthService authService)
     {
         _dbContext = dbContext;
         _userRepository = userRepository;
+        _authService = authService;
     }
     
     //public UserViewModel GetById(int id)
@@ -33,34 +36,40 @@ public class UserService : IUserService
     //    return userViewModel;
     //}
 
-    public int Create(CreateUserInputModel inputModel)
+    /*public int Create(CreateUserInputModel inputModel)
     {
-        var user = new User(inputModel.FullName, inputModel.Email, inputModel.Password, inputModel.BirthDate);
+        var user = new User(inputModel.FullName, inputModel.Email, inputModel.Password, inputModel.Role, inputModel.BirthDate);
         _dbContext.Users.Add(user);
         _dbContext.SaveChanges();
         return user.Id;
-    }
+    }*/
 
-    public int Login(UserViewLoginModel inputModel)
+    /*public int Login(UserViewLoginModel inputModel)
     {
        var user = _dbContext.Users.SingleOrDefault(u => u.FullName == inputModel.Username && u.Password == inputModel.Password);
        if (user == null) return 0;
        return user.Id;
-    }
+    }*/
 
-    async Task<int> IUserService.CreateAsync(CreateUserDto createUser)
+   public async Task<int> CreateAsync(CreateUserDto createUser)
     {
-        var user = new User(createUser.FullName, createUser.Email, createUser.Password, createUser.BirthDate);
+        var passwordHash = _authService.ComputeSha256Hash(createUser.Password);
+        
+        var user = new User(createUser.FullName, createUser.Email, passwordHash, createUser.Role, createUser.BirthDate);
         await _userRepository.SaveAsync(user);
         return user.Id;
     }
 
     public async Task<LoginUserViewModel?> LoginAsync(LoginUser inputModel)
     { 
-        var user = await _userRepository.UserCredentialAsync(inputModel.Email, inputModel.Password);
+        var passwordHash = _authService.ComputeSha256Hash(inputModel.Password);
+        
+        var user = await _userRepository.UserCredentialAsync(inputModel.Email, passwordHash);
         if (user == null) return null;
 
-        return new LoginUserViewModel(user.Id, user.FullName, "token");
+        var token = _authService.GenerateJwtToken(user.Email, user.Role);
+        
+        return new LoginUserViewModel(user.FullName, token);
     }
 
     public async Task<List<UserViewModel>> GetAllAsync(GetUsersInput query)

@@ -8,8 +8,8 @@ namespace DevFreela.Application.Services.Interfaces;
 
 public interface IUserService
 {
-    int Create(CreateUserInputModel inputModel);
-    int Login(UserViewLoginModel inputModel);
+    /*int Create(CreateUserInputModel inputModel);*/
+    /*int Login (UserViewLoginModel inputModel);*/
     Task<UserViewModel> GetByIdAsync(int id);
     Task <int> CreateAsync(CreateUserDto createUser);
     Task<LoginUserViewModel?> LoginAsync(LoginUser inputModel);

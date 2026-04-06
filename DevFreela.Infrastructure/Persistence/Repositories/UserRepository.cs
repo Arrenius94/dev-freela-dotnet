@@ -67,11 +67,11 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
             return user.Id;
         }
        
-        public async Task<User?> UserCredentialAsync(string email, string password)
+        public async Task<User?> UserCredentialAsync(string email, string passwordHash)
         {
             return await _dbContext.Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+                .SingleOrDefaultAsync(u => u.Email == email && u.Password == passwordHash);
         }
     }
 }
