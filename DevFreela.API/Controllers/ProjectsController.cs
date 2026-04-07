@@ -27,7 +27,7 @@ public class ProjectsController : ControllerBase
     }
     // api/projects?query=net core
     [HttpGet]
-    public async Task<IActionResult> Get(string query)
+    public async Task<IActionResult> Get(string? query)
     {
         /*var projects = _projectService.GetAll(query);*/
         if (!string.IsNullOrWhiteSpace(query) && query.Length < 2)

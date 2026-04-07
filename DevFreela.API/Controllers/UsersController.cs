@@ -59,7 +59,7 @@ public class UsersController : ControllerBase
 
         if (loginResult == null)
         {
-            return Unauthorized("Email ou senha inválidos.");
+            return Unauthorized(new { message = "Email ou senha inválidos." });
         }
         return Ok(loginResult);
     }
