@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using DevFreela.Core.Entities;
 
 namespace DevFreela.Infrastructure.Auth
 {
@@ -19,7 +20,7 @@ namespace DevFreela.Infrastructure.Auth
         {
             _configuration = configuration;
         }
-        public string GenerateJwtToken(string email, string role)
+        public string GenerateJwtToken(string email, EUserRole role)
         {
             var issuer = _configuration["Jwt:Issuer"];
             var audience = _configuration["Jwt:Audience"];
@@ -33,7 +34,7 @@ namespace DevFreela.Infrastructure.Auth
             var claims = new List<Claim>
             {
                 new Claim("userName", email),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Role, role.ToString())
             }; 
 
             var token = new JwtSecurityToken(

@@ -8,16 +8,18 @@ namespace DevFreela.Core.DTOS.Output.Projects
 {
     public class ProjectListDTO
     {
-        private string description;
+      
 
-        public ProjectListDTO(string title, string description, DateTime createdAt)
+        public ProjectListDTO(int id, string title, string description, DateTime createdAt)
         {
+            Id = id;
             Title = title;
-            this.description = description;
+            Description = description;
             CreatedAt = createdAt;
         }
         public int Id { get; set; }
         public string Title { get; set; }
+        public string Description { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

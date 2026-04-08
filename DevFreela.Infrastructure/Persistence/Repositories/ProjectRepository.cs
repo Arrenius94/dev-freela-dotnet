@@ -33,6 +33,7 @@ public class ProjectRepository : IProjectRepository
         }
         return await projectsQuery
             .Select(p => new ProjectListDTO(
+                p.Id,
                 p.Title,
                 p.Description,
                 p.CreatedAt
