@@ -10,12 +10,14 @@ using DevFreela.Application.Queries.GetAllProjects;
 using DevFreela.Application.Queries.GetProjectById;
 using DevFreela.Application.Services.Interfaces;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace DevFreela.API.Controllers;
 
 [Route("api/projects")]
+[Authorize]
 public class ProjectsController : ControllerBase
 {
     private readonly IProjectService _projectService;
@@ -27,6 +29,7 @@ public class ProjectsController : ControllerBase
     }
     // api/projects?query=net core
     [HttpGet]
+    [Authorize(Roles = "Client, Freelancer")]
     public async Task<IActionResult> Get(string? query)
     {
         /*var projects = _projectService.GetAll(query);*/
@@ -43,6 +46,7 @@ public class ProjectsController : ControllerBase
 
     // api/projects/599
     [HttpGet("{id}")]
+    [Authorize(Roles = "Client, Freelancer")]
     public async Task<IActionResult> GetById (int id)
     {
         /*var project = _projectService.GetById(id);*/
@@ -58,6 +62,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Client")]
     public async Task<IActionResult> Post ([FromBody] CreateProjectCommand comand)
     {
        
@@ -69,6 +74,7 @@ public class ProjectsController : ControllerBase
     
     // api/projects/2
     [HttpPut("{id}")]
+    [Authorize(Roles = "Client")]
     public async Task<IActionResult> Put (int id, [FromBody] UpdateProjectCommand command)
     {
         command.Id = id;
@@ -80,6 +86,7 @@ public class ProjectsController : ControllerBase
     
     // api/projects/3
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Client")]
     public async Task<IActionResult> Delete(int id)
     {
         /*_projectService.Delete(id);*/
@@ -90,6 +97,7 @@ public class ProjectsController : ControllerBase
     
     // api/projects/1/comments
     [HttpPost("{id}/coments")]
+    [Authorize(Roles = "Client, Freelancer")]
     public async Task<IActionResult> PostComment(int id, [FromBody] CreateCommentCommand comand)
     {
        await _mediator.Send(comand);
@@ -99,6 +107,7 @@ public class ProjectsController : ControllerBase
     
     // api/projects/1/start
     [HttpPut("{id}/start")]
+    [Authorize(Roles = "Client")]
     public async Task<IActionResult> Start(int id)
     {
         /*_projectService.Start(id);*/
@@ -109,6 +118,7 @@ public class ProjectsController : ControllerBase
 
     // api/projects/1/finish
     [HttpPut("{id}/finish")]
+    [Authorize(Roles = "Client")]
     public async Task<IActionResult> Finish(int id)
     {
         /*_projectService.Finish(id);*/

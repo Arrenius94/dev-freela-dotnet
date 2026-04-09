@@ -4,11 +4,13 @@ using DevFreela.Application.Services.Interfaces;
 using DevFreela.Application.ViewModels;
 using DevFreela.Core.DTOS.Input.Users;
 using DevFreela.Core.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DevFreela.API.Controllers;
 [Route("api/users")]
+[Authorize]
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
@@ -42,6 +44,7 @@ public class UsersController : ControllerBase
 
     // api/users
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Post([FromBody] CreateUserDto createInputUserModel)
     {
             
@@ -52,6 +55,7 @@ public class UsersController : ControllerBase
 
     // api/users//login
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginUser inputModel)
     {
        
