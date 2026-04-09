@@ -28,6 +28,10 @@ public class ProjectsController : ControllerBase
        _mediator = mediator;
     }
     // api/projects?query=net core
+    /// <summary>
+    /// Retorna a lista de projetos, podendo ser filtrada por título ou descrição, usando o parâmetro de query "query".
+    /// O filtro é opcional, e para filtrar, é necessário digitar pelo menos 2 caracteres.
+    /// </summary>
     [HttpGet]
     [Authorize(Roles = "Client, Freelancer")]
     public async Task<IActionResult> Get(string? query)
