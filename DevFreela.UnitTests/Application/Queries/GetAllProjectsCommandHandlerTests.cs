@@ -32,9 +32,13 @@ namespace DevFreela.UnitTests.Application.Queries
 
             // Act
             var projectViewModelsList = await getAllProjectsCommandHandler.Handle(getAllProjectsQueryHandler, CancellationToken.None); 
-
-
+            
             // Assert
+            Assert.NotNull(projectViewModelsList);
+            Assert.NotEmpty(projectViewModelsList);
+            Assert.Equal(projects.Count, projectViewModelsList.Count);
+            
+            projectRepositoryMock.Verify(pr => pr.GetAll(It.IsAny<string>()).Result, Times.Once);
         }
     }
 }
